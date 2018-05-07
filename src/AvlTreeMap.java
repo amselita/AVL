@@ -1,26 +1,66 @@
 import java.util.Iterator;
 
-public class AvlTree<K, V> implements SortedMap {
+public class AvlTreeMap<K, V> implements SortedMap {
 	
+	AVLNode <K,V> parent;
+	AVLNode <K, V> left;
+	AVLNode <K, V> right;
+	AVLNode <K,V> root;
 	K key;
 	V value;
 	int balance;
+	
+	
+	public AvlTreeMap (){
+		
+		
+	}
+	
+	public booblean hasChildren(AVLNode currentNode){
+		
+	}
 
 	@Override
 	public Iterator iterator() {
-		// TODO Auto-generated method stub
+		AVLNode root=this;
+		System.out.println((this.get(root));
+		
+		if (left.get()!=null){
+			// while (i=0; this.hasChildren==true){
+			
+				System.out.println(", "+get(root));
+				root.left=root;
+				root.iterator();
+				
+			else {
+				if (right.get()!=null){
+					right.get()	
+					System.out.println(", "+right.get());
+					
+					}
+		
+		
+
+				
+		}
+			
+			
+			
 		return null;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		this.get()=null;
+		return true;
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		this.put(key, value){
+			value=null;
+		}
+	
 		
 	}
 
