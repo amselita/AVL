@@ -2,6 +2,7 @@
 
 abstract class Body{
 	
+	
 	/**
 	 * calculates the surface of an body
 	 * @return double value the surface
@@ -25,5 +26,6 @@ abstract class Body{
 	//TODO
 	public abstract boolean equals(Object o);
 	
+	public abstract double getLocation (Body body);
 	
 }
