@@ -4,6 +4,16 @@ import java.util.Iterator;
 
 public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 	
+	public static void main(String...strings) {
+		Comparator<String> stringComparator = new Comparator<String>() {
+			@Override
+			public int compare(String eins, String zwei) {
+				return eins.compareTo(zwei) * -1;
+			}
+		};
+		AvlTreeMap<String, Body> treeMap = new AvlTreeMap<String, Body>(stringComparator);
+	}
+	
 	//TODO: private
 	public AvlNode<K,V> root;
 	public Comparator <K> comp;
@@ -113,36 +123,64 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
 	@Override
 	public V put(K key, V value) {
-		//muss ich Object sagen dass es eine AvlNode ist?
-		AvlNode< K, V> current = new AvlNode<K,V>();
-		current=root;
-		AvlNode<K, V> toput = new AvlNode<K,V>(key, value, null);
-		while (current.getRight()!=null || current.getLeft()!=null){
-			if ((compare(toput.getKey(),current.getKey())==-1){//key < current.getKey(){
-				current=current.getLeft();
-			} else current=current.getRight();
-		}
-		toput.setParent(current);
-		if ((compare(current.getKey(),toput.getKey())==-1){
-			current.setLeft(toput);
-		} else current.setRight(toput);
-			
-		toput.height = 1 + max(height(toput.left),
-                height(toput.right));
-		current=toput; //??
-		
-		while (current.hasNext()==true){
-			current.height = max(height(current.left),
-	                height(current.right));
-					current=current.next();
-		}
-		
-		
-		return null;
+		return insert(root, key, value);
 	}
+		
+	public V insert (AvlNode<K, V> current, K key, V value){
+		if (current==null){
+			current=new AvlNode<>(key, value, null);
+			return null;
+		} else if (current.getKey()==key){
+			current=new AvlNode<>(key, value, null);
+			return current.getValue();
+		}
+	
+		int compared = comp.compare(key, current.getKey());
+	
+		if (compared==0){
+			current.setKey(key);
+		}
+		else if(compared<0){
+			current=current.getLeft();
+			insert(current,key, value);
+		}
+		else{
+			current=current.getRight();
+			insert(current,key, value);
+		}
+		return null;
+		
+	}
+		
+		
+		
+//		while (current.getRight()!=null || current.getLeft()!=null){
+//			if ((comp.compare(toput.getKey(),current.getKey())==-1){//key < current.getKey(){
+//				current=current.getLeft();
+//			} else current=current.getRight();
+//		}
+//		toput.setParent(current);
+//		if ((comp.compare(current.getKey(),toput.getKey())==-1){
+//			current.setLeft(toput);
+//		} else current.setRight(toput);
+//			
+//		toput.height = 1 + max(height(toput.left),
+//                height(toput.right));
+//		current=toput; //??
+//		
+//		while (current.hasNext()==true){
+//			current.height = max(height(current.left),
+//	                height(current.right));
+//					current=current.next();
+//		}
+//		
+//		
+//		return null;
+//	}
+//	
 
 	@Override
-	public K remove(Object key) {
+	public V remove(K key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -153,13 +191,13 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 		
 		if (key==null) return false;
 		
-		int comp = key.compareTo(current.getKey());
+		int compared = comp.compare(current.getKey(), key);
 		
-		if (comp < 0) {
+		if (compared < 0) {
 			current=current.getLeft();
 			return contains(current, key);
 		}
-		if (comp > 0){
+		if (compared > 0){
 			current=current.getRight();
 			return contains(current, key);
 		}
