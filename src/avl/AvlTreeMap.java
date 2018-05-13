@@ -3,25 +3,12 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 public class AvlTreeMap<K, V> implements SortedMap<V, K> {
-	
-	public static void main(String...strings) {
-		Comparator<String> stringComparator = new Comparator<String>() {
-			@Override
-			public int compare(String eins, String zwei) {
-				return eins.compareTo(zwei) * -1;
-			}
-		};
-		AvlTreeMap<String, Body> treeMap = new AvlTreeMap<String, Body>(stringComparator);
-	}
-	
-	//TODO: private
 	public AvlNode<K,V> root;
 	public Comparator <K> comp;
+	//TOD private machen
 	
 	public AvlTreeMap (Comparator<K> comp){
-		this.root = new AvlNode<K,V>();
-		root.value=null;
-		root.parent=null;
+		this.root=null;
 		this.comp=comp;
 	}
 	
@@ -67,7 +54,8 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
 	@Override
 	public boolean isEmpty() {
-		return (root.getLeft()==null && root.getRight()==null);
+		return root==null;
+		
 	}
 
 	@Override
@@ -127,28 +115,38 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 	}
 		
 	public V insert (AvlNode<K, V> current, K key, V value){
-		if (current==null){
-			current=new AvlNode<>(key, value, null);
+		if (isEmpty()==true){
+			root=new AvlNode<K,V>(key, value, null);
 			return null;
 		} else if (current.getKey()==key){
 			current=new AvlNode<>(key, value, null);
 			return current.getValue();
 		}
-	
 		int compared = comp.compare(key, current.getKey());
-	
 		if (compared==0){
 			current.setKey(key);
 		}
 		else if(compared<0){
-			current=current.getLeft();
-			insert(current,key, value);
+			if (current.getLeft()!=null){
+				current=current.getLeft();
+				insert(current,key, value);
+			} else {
+				current.setLeft(new AvlNode<K,V>(key,value, current));
+			}
 		}
 		else{
-			current=current.getRight();
+			if(current.getRight()!=null){ 
+				current=current.getRight();
 			insert(current,key, value);
+			} else {
+				current.setRight(new AvlNode<K,V>(key,value, current));
+			}
 		}
-		return null;
+		return null;	
+	}
+	
+	private void updateHeight(AvlNode<K, V> toupdate){
+		toupdate.getParent().setHeight(toupdate.getHeight()+1);
 		
 	}
 		
