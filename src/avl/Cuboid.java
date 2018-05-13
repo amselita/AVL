@@ -1,3 +1,4 @@
+package avl;
 
 public final class Cuboid extends Body {
 

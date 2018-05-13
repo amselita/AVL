@@ -1,14 +1,13 @@
+package avl;
 import java.util.Iterator;
 
 
 public class AvlNodeIterator<K,  V> implements Iterator<AvlNode<K, V>> {
 	AvlNode<K, V> next;
-	AvlNode<K, V> last;
 
 	
 	public AvlNodeIterator(AvlNode<K, V> min) {
 		next=min;
-		last=null;
 	}
 	
 	@Override
@@ -18,9 +17,7 @@ public class AvlNodeIterator<K,  V> implements Iterator<AvlNode<K, V>> {
 	}
 
 	/**
-	 * das in next gespeicherte next wird ausgegeben
-	 * generates das next für den nächsten next aufruf in der vairale next ab
-	 * für den ersten aufruf ist das min schon als next gesetzt
+	 * holt logisch nächstes Element in der Reihenfolge des trees
 	 * 
 	 */
 	@Override
