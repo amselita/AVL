@@ -186,71 +186,112 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
 	@Override
 	public V remove(K key) {
-		AvlNode<K,V> toremove;
-		toremove=find(root,key);
-		V value;
-		value=toremove.getValue();
-		AvlNode<K, V> parent=toremove.getParent();
-		if (toremove.getLeft()== null && toremove.getRight()==null){
-			if (parent==null){
-				root=null;
-			} else if (isLeftChild(toremove)==true){
-				parent.setLeft(null);
-			} else {
-				parent.setRight(null);
-			}
-			return value;	
-		} else if (toremove.getLeft()!= null && toremove.getRight()==null){
-			// 
-			if (parent==null){
-				root=toremove.getLeft();
-			} else if (isLeftChild(toremove)==true){
-				parent.setLeft(toremove.getLeft());
-				toremove.getLeft().setParent(parent);			
-			} else {
-				parent.setRight(toremove.getRight());
-				toremove.getRight().setParent(parent);
+		AvlNode<K,V> toRemove;
+		toRemove=find(root,key);
+		
+		if (toRemove!=null){
+			V value;
+			value = toRemove.getValue();
+			AvlNode<K, V> parent = toRemove.getParent();
+			if (toRemove.getLeft() == null && toRemove.getRight() == null) {
+				if (parent == null) {
+					root = null;
+				} else if (isLeftChild(toRemove) == true) {
+					parent.setLeft(null);
+				} else {
+					parent.setRight(null);
+				}
+				//return value;
+			} else if (toRemove.getLeft() != null && toRemove.getRight() == null) {
+				//
+				if (parent == null) {
+					root = toRemove.getLeft();
+				} else if (isLeftChild(toRemove) == true) {
+					parent.setLeft(toRemove.getLeft());
+					toRemove.getLeft().setParent(parent);
+				} else {
+					parent.setRight(toRemove.getRight());
+					toRemove.getRight().setParent(parent);
+				}
+				//return value;
+				// node to be removed has only a right childnode
+			} else if (toRemove.getLeft() == null && toRemove.getRight() != null) {
+				// the parent of the node to remove is null, which means the
+				// node to be deleted
+				// is the root node
+				if (parent == null) {
+					root = toRemove.getRight().findMin();
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					}
+
+					// the node to be deleted is the left child of its parent
+				} else if (isLeftChild(toRemove) == true) {
+					parent.setLeft(toRemove.getRight().findMin());
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					} else {
+						toRemove.getRight().findMin().setParent(parent);
+					}
+					if (toRemove.getRight().findMin().getRight()!=null){
+						toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+					}
+					//toRemove.getRight().findMin().setLeft(toRemove.getLeft());
+					// the node to be deleted is the right child of its parent
+				} else {
+					parent.setRight(toRemove.getRight().findMin());
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					}	else {
+						 toRemove.getRight().findMin().setParent(parent);
+					}
+					if (toRemove.getRight().findMin().getRight()!=null){
+						toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+					}
+				}
+				//return value;
+			} else if (toRemove.getLeft() != null && toRemove.getRight() != null) {
+				if (parent == null) {
+					AvlNode<K, V> oldRoot = root;
+					root = toRemove.getRight().findMin();
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					} else {
+						toRemove.getRight().findMin().setParent(null);
+					}
+					if (toRemove.getRight().findMin().getRight()!=null){
+						toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getRight());
+					}
+					toRemove.getRight().findMin().setLeft(oldRoot.getLeft());
+
+					// root.getLeft().setParent(toremove.getRight().findMin());
+				} else if (isLeftChild(toRemove) == true) {
+					parent.setLeft(toRemove.getRight().findMin());
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					}	else {
+						toRemove.getRight().findMin().setLeft(toRemove.getLeft());
+					}
+					if (toRemove.getRight().findMin().getRight()!=null){
+						toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+					}
+				} else {
+					parent.setRight(toRemove.getRight().findMin());
+					if (toRemove.getRight().findMin()!=toRemove.getRight()){
+						toRemove.getRight().findMin().getParent().setLeft(null);
+					} else {
+						toRemove.getRight().findMin().setParent(parent);
+					}
+					if (toRemove.getRight().findMin().getRight()!=null){
+						toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+					}	
+				}
+				//return value;
 			}
 			return value;
-		//node to be removed has only a right childnode	
-		} else if (toremove.getLeft()== null && toremove.getRight()!=null){
-			//the parent of the node to remove is null, which means the node to be deleted 
-			//is the root node
-			if (parent==null){
-				root=toremove.getRight().findMin();
-				toremove.getRight().findMin().getParent().setLeft(null);
-				
-			//the node to be deleted is the left child of its parent	
-			} else if(isLeftChild(toremove)==true){
-				parent.setLeft(toremove.getRight().findMin());
-				toremove.getRight().findMin().getParent().setLeft(null);
-				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
-			//the node to be deleted is the right child of its parent	
-			}else {
-				parent.setRight(toremove.getRight().findMin());
-				toremove.getRight().findMin().getParent().setLeft(null);
-				toremove.getRight().findMin().getParent().setLeft(null);
-				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
-			}
-			return value;
-		} else if (toremove.getLeft()!= null && toremove.getRight()!=null){	
-			if (parent==null){
-				root=toremove.getRight().findMin();
-				toremove.getRight().findMin().getParent().setLeft(null);
-				root.getRight().findMin().setLeft(root.getLeft());
-				root.getLeft().setParent(toremove.getRight().findMin());
-			} else if(isLeftChild(toremove)==true){
-				parent.setLeft(toremove.getRight().findMin());
-				toremove.getRight().findMin().getParent().setLeft(null);
-				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());				
-			} else {
-				parent.setRight(toremove.getRight().findMin());
-				toremove.getRight().findMin().getParent().setLeft(null);
-				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
-			}
-			return value;		
+		} else { //key not found
+			return null;
 		}
-		return value;
 	}
 			
 //	if (containsKey(key)==true){
