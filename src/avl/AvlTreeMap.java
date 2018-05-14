@@ -335,7 +335,9 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
 	
 	private AvlNode<K,V> find (AvlNode<K,V> current, K key){
-		if (current==null) return null;
+		if (current==null){
+			return null;
+		}
 		
 		int compared = comp.compare(key, current.getKey());
 		
@@ -347,6 +349,33 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 			return find(current, key);
 		} else {
 			return current;			
+		}
+	}
+	
+	// node is the node that has been inserted
+	private void rebalenceAfterInsert (AvlNode<K, V> node){
+		AvlNode<K, V> parent = node.getParent();
+		if (parent != null) {
+			if (parent.parent.getBalance() == 0) { // parent has no right child
+				if (isLeftChild(node) == true) {
+					parent.setBalance(-1);
+				} else {
+					parent.setBalance(1);
+				}
+			} else if (parent.parent.getBalance() == -1) {
+					if (isLeftChild(node)==true){
+					parent.parent.setBalance(-2);
+					} else {
+					}
+			} else if (parent.parent.getBalance() == 1) {
+					parent.parent.setBalance(2);
+			}
+				parent.rebalenceAfterInsert();
+			}
+		}
+			
+		if (parent.getParent().getBalance()==-1){//node is left child of a left child (with no right)
+			
 		}
 	}
 	
