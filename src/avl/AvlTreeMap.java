@@ -65,7 +65,7 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
 	@Override
 	public boolean containsKey(K key){
-		return contains(root,key);
+		return find(root,key)!=null;
 		
 	}
 
@@ -175,29 +175,156 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 //		return null;
 //	}
 //	
+	
+	/**
+	 * utility method to check weather a node is the left or the right child of its parent
+	 */
+	
+	private boolean isLeftChild(AvlNode<K, V> node){
+		return node.getParent().getLeft()==node;
+	}
 
 	@Override
 	public V remove(K key) {
-		// TODO Auto-generated method stub
-		return null;
+		AvlNode<K,V> toremove;
+		toremove=find(root,key);
+		V value;
+		value=toremove.getValue();
+		AvlNode<K, V> parent=toremove.getParent();
+		if (toremove.getLeft()== null && toremove.getRight()==null){
+			if (parent==null){
+				root=null;
+			} else if (isLeftChild(toremove)==true){
+				parent.setLeft(null);
+			} else {
+				parent.setRight(null);
+			}
+			return value;	
+		} else if (toremove.getLeft()!= null && toremove.getRight()==null){
+			// 
+			if (parent==null){
+				root=toremove.getLeft();
+			} else if (isLeftChild(toremove)==true){
+				parent.setLeft(toremove.getLeft());
+				toremove.getLeft().setParent(parent);			
+			} else {
+				parent.setRight(toremove.getRight());
+				toremove.getRight().setParent(parent);
+			}
+			return value;
+		//node to be removed has only a right childnode	
+		} else if (toremove.getLeft()== null && toremove.getRight()!=null){
+			//the parent of the node to remove is null, which means the node to be deleted 
+			//is the root node
+			if (parent==null){
+				root=toremove.getRight().findMin();
+				toremove.getRight().findMin().getParent().setLeft(null);
+				
+			//the node to be deleted is the left child of its parent	
+			} else if(isLeftChild(toremove)==true){
+				parent.setLeft(toremove.getRight().findMin());
+				toremove.getRight().findMin().getParent().setLeft(null);
+				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
+			//the node to be deleted is the right child of its parent	
+			}else {
+				parent.setRight(toremove.getRight().findMin());
+				toremove.getRight().findMin().getParent().setLeft(null);
+				toremove.getRight().findMin().getParent().setLeft(null);
+				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
+			}
+			return value;
+		} else if (toremove.getLeft()!= null && toremove.getRight()!=null){	
+			if (parent==null){
+				root=toremove.getRight().findMin();
+				toremove.getRight().findMin().getParent().setLeft(null);
+				root.getRight().findMin().setLeft(root.getLeft());
+				root.getLeft().setParent(toremove.getRight().findMin());
+			} else if(isLeftChild(toremove)==true){
+				parent.setLeft(toremove.getRight().findMin());
+				toremove.getRight().findMin().getParent().setLeft(null);
+				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());				
+			} else {
+				parent.setRight(toremove.getRight().findMin());
+				toremove.getRight().findMin().getParent().setLeft(null);
+				toremove.getRight().findMin().setRight(toremove.getRight().findMin().getParent());
+			}
+			return value;		
+		}
+		return value;
 	}
+			
+//	if (containsKey(key)==true){
+//	AvlNode <K,V> current; 
+//	current=find(root, key);
+//	
+//	if(toremove.getLeft()==null){
+//		toremove=toremove.getRight();
+//		return value;
+//
+//	}
+//}
+//return value;
+			
+			
+//			if (toremove.getLeft()==null && toremove.getRight()==null){
+//				toremove=null;
+//			}
+//			
+//			if (toremove==root){
+//				if (root.getRight().findMin().getRight()==null){
+//					root=root.getRight().findMin();
+//				} else {
+//					AvlNode<K,V> minimum;
+//					root=root.getRight().findMin();
+//					minimum=root.getRight().findMin();
+//					minimum.getParent().setRight(minimum.getRight());
+//					root=minimum;
+//				}	
+//			} else if (toremove.getLeft()!=null && toremove.getRight()!=null){
+//				toremove=toremove.getRight().findMin();
+//			} else if(toremove.getLeft()!=null||toremove.getRight()==null){
+//				toremove=toremove.getLeft();
+//			} else if (toremove.getLeft()==null||toremove.getRight()!=null){
+//				toremove=toremove.getRight();
+//			}
+//			return current.getValue();
+//		} else {
+//			return null;
+//		}	
+
 	
-	//current ist start/wo man sich befindet, key der zu suchenden node
-	private boolean contains (AvlNode<K,V> current, K key){
-		if (current==null) return false;
+	private AvlNode<K,V> find (AvlNode<K,V> current, K key){
+		if (current==null) return null;
 		
 		int compared = comp.compare(key, current.getKey());
 		
 		if (compared < 0) {
 			current=current.getLeft();
-			return contains(current, key);
+			return find(current, key);
 		} else if (compared > 0){
 			current=current.getRight();
-			return contains(current, key);
+			return find(current, key);
 		} else {
-			return true;			
+			return current;			
 		}
 	}
+	
+	//current ist start/wo man sich befindet, key der zu suchenden node
+//	private boolean contains (AvlNode<K,V> current, K key){
+//		if (current==null) return false;
+//		
+//		int compared = comp.compare(key, current.getKey());
+//		
+//		if (compared < 0) {
+//			current=current.getLeft();
+//			return contains(current, key);
+//		} else if (compared > 0){
+//			current=current.getRight();
+//			return contains(current, key);
+//		} else {
+//			return true;			
+//		}
+//	}
 //		
 //	public static <K extends Comparalble<K>, V> SortedMap <K,V> create (){
 //		return create (K::compareTo);
