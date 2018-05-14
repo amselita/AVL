@@ -118,13 +118,12 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 		if (isEmpty()==true){
 			root=new AvlNode<K,V>(key, value, null);
 			return null;
-		} else if (current.getKey()==key){
-			current=new AvlNode<>(key, value, null);
-			return current.getValue();
 		}
 		int compared = comp.compare(key, current.getKey());
 		if (compared==0){
-			current.setKey(key);
+			V oldvalue=current.getValue();
+			current.setValue(value);
+			return oldvalue;
 		}
 		else if(compared<0){
 			if (current.getLeft()!=null){
@@ -185,21 +184,19 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 	
 	//current ist start/wo man sich befindet, key der zu suchenden node
 	private boolean contains (AvlNode<K,V> current, K key){
+		if (current==null) return false;
 		
-		
-		if (key==null) return false;
-		
-		int compared = comp.compare(current.getKey(), key);
+		int compared = comp.compare(key, current.getKey());
 		
 		if (compared < 0) {
 			current=current.getLeft();
 			return contains(current, key);
-		}
-		if (compared > 0){
+		} else if (compared > 0){
 			current=current.getRight();
 			return contains(current, key);
+		} else {
+			return true;			
 		}
-		return true;
 	}
 //		
 //	public static <K extends Comparalble<K>, V> SortedMap <K,V> create (){

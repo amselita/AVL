@@ -6,10 +6,11 @@ public class AvlTestMap extends AvlTreeMap<String, Integer> {
 		super(new MyComparator());
 		
 		root = new AvlNode<String, Integer>("Grashalm", 5, null);
-		AvlNode<String, Integer> left = new AvlNode<String, Integer>("stein", 4, root);
+		AvlNode<String, Integer> left = new AvlNode<String, Integer>("blume", 4, root);
 		root.setLeft(left);
-		AvlNode<String, Integer> right = new AvlNode<String, Integer>("blume", 6, root);
+		AvlNode<String, Integer> right = new AvlNode<String, Integer>("stein", 6, root);
 		root.setRight(right);
+		
 		
 	}
 
@@ -18,9 +19,13 @@ public class AvlTestMap extends AvlTreeMap<String, Integer> {
 		AvlTestMap testMap = new AvlTestMap();
 		
 		// print keys
-		Iterator<AvlNode<String, Integer>> iterator = testMap.iterator();
+		Iterator<Integer> iterator = testMap.iterator();
+		testMap.put("Grashalm", 11);
+		System.out.println(testMap.containsKey("ast"));
+		System.out.println(testMap.containsKey("blume"));
 		while(iterator.hasNext() == true) {
-			System.out.println("Key: " + iterator.next().getKey());
+			System.out.println("Value: " + iterator.next());
+		
 		}
 	}
 
