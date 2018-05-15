@@ -1,20 +1,17 @@
 package avl;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
 public final class Shell {
-	/**
-	 * utlilty class
-	 */
-	private Shell() {
-	}
-	
-	
+    /**
+     * utlilty class
+     */
+    private Shell() {
+    }
 
-	private static void execute (BufferedReader stdin)
+    private static void execute (BufferedReader stdin)
 	throws IOException {
 		try {
 			boolean quit = false;
@@ -88,6 +85,6 @@ public final class Shell {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+public static void main(String[] args) throws IOException {
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		execute(stdin);

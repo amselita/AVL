@@ -187,17 +187,11 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
 
     }
 
-    //
-
     /**
-     * utility method to check weather a node is the left or the right child of
-     * its parent
-     */
-
-    /**
-     * utility methode checking weather a node is the left or right child of its parent 
-     * @param node of which 
-     * @return
+     * utility method checking weather a node is the left or right child of its parent 
+     * @param node of which should be checked
+     * @return boolean {@code true} if the node is the left child of its parent
+     *                 {@code no} if the node is the right child of its parent
      */
     private boolean isLeftChild(AvlNode<K, V> node) {
         return node.getParent().getLeft() == node;
@@ -206,109 +200,127 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
     @Override
     public V remove(K key) {
         AvlNode<K, V> toRemove;
-        toRemove = find(root, key);
-
+        toRemove=find(root, key);
+        AvlNode<K, V> left;
+        left = toRemove.getLeft();
+        AvlNode<K,V> right = toRemove.getRight();
+        AvlNode<K,V> minimumRight;
+        minimumRight=toRemove.getRight().findMin();
         if (toRemove != null) {
             V value;
             value = toRemove.getValue();
             AvlNode<K, V> parent = toRemove.getParent();
-            if (toRemove.getLeft() == null && toRemove.getRight() == null) {
+            //node has no children
+            if (left == null && right == null) {
+                //node is root
                 if (parent == null) {
                     root = null;
-                } else if (isLeftChild(toRemove) == true) {
+                 //node is a left child
+                } else if (isLeftChild(toRemove)) {
                     parent.setLeft(null);
+                 //node is a right child
                 } else {
                     parent.setRight(null);
                 }
                 // return value;
-            } else if (toRemove.getLeft() != null && toRemove.getRight() == null) {
-                //
+             //node has only a left child
+            } else if (left != null && right == null) {
+                //node is root 
                 if (parent == null) {
-                    root = toRemove.getLeft();
+                    root = left;
+                 //node is left child
                 } else if (isLeftChild(toRemove) == true) {
-                    parent.setLeft(toRemove.getLeft());
-                    toRemove.getLeft().setParent(parent);
+                    parent.setLeft(left);
+                    left.setParent(parent);
+                 //node is right child
                 } else {
-                    parent.setRight(toRemove.getRight());
-                    toRemove.getRight().setParent(parent);
+                    parent.setRight(right);
+                   // right.setParent(parent);
                 }
-                // return value;
-                // node to be removed has only a right childnode
-            } else if (toRemove.getLeft() == null && toRemove.getRight() != null) {
-                // the parent of the node to remove is null, which means the
-                // node to be deleted
-                // is the root node
+                // return value; TODO
+                // node to be removed has only a right child
+            } else if (left == null && right != null) {  
+                // node is the root 
                 if (parent == null) {
-                    root = toRemove.getRight().findMin();
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                    root = minimumRight;
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
                     }
-
-                    // the node to be deleted is the left child of its parent
-                } else if (isLeftChild(toRemove) == true) {
-                    parent.setLeft(toRemove.getRight().findMin());
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                   // node is left child
+                } else if (isLeftChild(toRemove)) {
+                    parent.setLeft(minimumRight);
+                    //minimum has a right child
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
+                     //minimum has no right child and is itself the 
+                     //right child of the node
                     } else {
-                        toRemove.getRight().findMin().setParent(parent);
+                        minimumRight.setParent(parent);
                     }
-                    if (toRemove.getRight().findMin().getRight() != null) {
-                        toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+                    if (minimumRight.getRight() != null) {
+                        minimumRight.setRight(minimumRight.getParent());
                     }
                     // toRemove.getRight().findMin().setLeft(toRemove.getLeft());
-                    // the node to be deleted is the right child of its parent
+                  // node is left child
                 } else {
-                    parent.setRight(toRemove.getRight().findMin());
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                    parent.setRight(minimumRight);
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
                     } else {
-                        toRemove.getRight().findMin().setParent(parent);
+                        minimumRight.setParent(parent);
                     }
-                    if (toRemove.getRight().findMin().getRight() != null) {
-                        toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+                    if (minimumRight.getRight() != null) {
+                        minimumRight.setRight(minimumRight.getParent());
                     }
                 }
                 // return value;
-            } else if (toRemove.getLeft() != null && toRemove.getRight() != null) {
+                //node has a left child and a right child
+            } else if (left != null && right != null) {
+                //node is the root 
                 if (parent == null) {
                     AvlNode<K, V> oldRoot = root;
-                    root = toRemove.getRight().findMin();
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                    root = minimumRight;
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
                     } else {
-                        toRemove.getRight().findMin().setParent(null);
+                        minimumRight.setParent(null);
                     }
-                    if (toRemove.getRight().findMin().getRight() != null) {
-                        toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getRight());
+                    if (minimumRight.getRight() != null) {
+                        minimumRight.setRight(minimumRight.getRight());
                     }
-                    toRemove.getRight().findMin().setLeft(oldRoot.getLeft());
-
-                    // root.getLeft().setParent(toremove.getRight().findMin());
-                } else if (isLeftChild(toRemove) == true) {
-                    parent.setLeft(toRemove.getRight().findMin());
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                    minimumRight.setLeft(oldRoot.getLeft());
+                    root.getLeft().setParent(minimumRight);
+                   //node is a left child
+                } else if (isLeftChild(toRemove)) {
+                    parent.setLeft(minimumRight);
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
                     } else {
-                        toRemove.getRight().findMin().setLeft(toRemove.getLeft());
+                        minimumRight.setLeft(left);
                     }
-                    if (toRemove.getRight().findMin().getRight() != null) {
-                        toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+                    if (minimumRight.getRight() != null) {
+                        minimumRight.setRight(minimumRight.getParent());
                     }
+                  //node is a right child
                 } else {
-                    parent.setRight(toRemove.getRight().findMin());
-                    if (toRemove.getRight().findMin() != toRemove.getRight()) {
-                        toRemove.getRight().findMin().getParent().setLeft(null);
+                    parent.setRight(minimumRight);
+                    if (minimumRight != right) {
+                        minimumRight.getParent().setLeft(null);
                     } else {
-                        toRemove.getRight().findMin().setParent(parent);
+                        minimumRight.setParent(parent);
                     }
-                    if (toRemove.getRight().findMin().getRight() != null) {
-                        toRemove.getRight().findMin().setRight(toRemove.getRight().findMin().getParent());
+                    if (minimumRight.getRight() != null) {
+                        minimumRight.setRight(minimumRight.getParent());
                     }
                 }
                 // return value;
             }
+            toRemove.setLeft(null);
+            toRemove.setRight(null);
+            toRemove.setParent(null);
             return value;
-        } else { // key not found
+         // key not found
+        } else {
             return null;
         }
     }
