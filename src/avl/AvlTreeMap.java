@@ -201,11 +201,8 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
     public V remove(K key) {
         AvlNode<K, V> toRemove;
         toRemove=find(root, key);
-        AvlNode<K, V> left;
-        left = toRemove.getLeft();
+        AvlNode<K, V> left=toRemove.getLeft();
         AvlNode<K,V> right = toRemove.getRight();
-        AvlNode<K,V> minimumRight;
-        minimumRight=toRemove.getRight().findMin();
         if (toRemove != null) {
             V value;
             value = toRemove.getValue();
@@ -228,91 +225,186 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
                 //node is root 
                 if (parent == null) {
                     root = left;
+                    left.setParent(null);
                  //node is left child
                 } else if (isLeftChild(toRemove) == true) {
                     parent.setLeft(left);
                     left.setParent(parent);
                  //node is right child
                 } else {
-                    parent.setRight(right);
+                    parent.setRight(left);
+                    left.setParent(parent);
                    // right.setParent(parent);
                 }
                 // return value; TODO
                 // node to be removed has only a right child
             } else if (left == null && right != null) {  
+                AvlNode<K,V> minimumRight;
+                minimumRight=toRemove.getRight().findMin();
                 // node is the root 
                 if (parent == null) {
                     root = minimumRight;
-                    if (minimumRight != right) {
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
+                    } else {
+                        minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
+                    
+                    
+                    
+                    
+//                    if (minimumRight != right) {
+//                        minimumRight.getParent().setLeft(null);
+//                        minimumRight.setRight(right);
+//                    }
+//                    if(minimumRight.getRight()!=null){
+//                        minimumRight.getParent().setLeft(minimumRight.getRight());
+//                        minimumRight.getRight().setParent(minimumRight.getParent());
+//                    }
+                    
                    // node is left child
                 } else if (isLeftChild(toRemove)) {
                     parent.setLeft(minimumRight);
+                    minimumRight.setParent(parent);
                     //minimum has a right child
-                    if (minimumRight != right) {
-                        minimumRight.getParent().setLeft(null);
                      //minimum has no right child and is itself the 
                      //right child of the node
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
                     } else {
-                        minimumRight.setParent(parent);
-                    }
-                    if (minimumRight.getRight() != null) {
-                        minimumRight.setRight(minimumRight.getParent());
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(null);
                     }
                     // toRemove.getRight().findMin().setLeft(toRemove.getLeft());
                   // node is left child
                 } else {
                     parent.setRight(minimumRight);
-                    if (minimumRight != right) {
-                        minimumRight.getParent().setLeft(null);
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
                     } else {
-                        minimumRight.setParent(parent);
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(null);
                     }
-                    if (minimumRight.getRight() != null) {
-                        minimumRight.setRight(minimumRight.getParent());
-                    }
+                    
+                    
+                    
+//                    if (minimumRight != right) {
+//                        minimumRight.getParent().setLeft(null);
+//                    } else {
+//                        minimumRight.setParent(parent);
+//                    }
+//                    if (minimumRight.getRight() != null) {
+//                        minimumRight.setRight(minimumRight.getParent());
+//                    }
                 }
                 // return value;
                 //node has a left child and a right child
             } else if (left != null && right != null) {
+                AvlNode<K,V> minimumRight;
+                minimumRight=toRemove.getRight().findMin();
                 //node is the root 
                 if (parent == null) {
                     AvlNode<K, V> oldRoot = root;
                     root = minimumRight;
-                    if (minimumRight != right) {
+                    //minimum has a right child
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
+                    } else if(minimumRight!=right && minimumRight.getRight()==null){
+                        minimumRight.setRight(right);
+                        right.setParent(minimumRight);
                         minimumRight.getParent().setLeft(null);
-                    } else {
-                        minimumRight.setParent(null);
+                        
                     }
-                    if (minimumRight.getRight() != null) {
-                        minimumRight.setRight(minimumRight.getRight());
-                    }
+//                      else  //minimumRight.setRight(right);
+//                        //minimumRight.getParent().setLeft(null);
+//                    }
+//                    
+                    
+//                    if (minimumRight != right) {
+//                    minimumRight.getParent().setLeft(null);
+//                        minimumRight.setRight(right);
+//                        
+//                    } else {
+//                        minimumRight.setParent(null);
+//                        minimumRight.setRight(null);
+//                    }
+//                    if (minimumRight.getRight() != null) {
+//                        minimumRight.getRight().setParent(minimumRight.getParent());
+//                    }
                     minimumRight.setLeft(oldRoot.getLeft());
-                    root.getLeft().setParent(minimumRight);
+                    oldRoot.getLeft().setParent(minimumRight);
+                    minimumRight.setParent(null);
                    //node is a left child
                 } else if (isLeftChild(toRemove)) {
                     parent.setLeft(minimumRight);
-                    if (minimumRight != right) {
-                        minimumRight.getParent().setLeft(null);
+                    minimumRight.setLeft(left);
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
                     } else {
-                        minimumRight.setLeft(left);
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(null);
                     }
-                    if (minimumRight.getRight() != null) {
-                        minimumRight.setRight(minimumRight.getParent());
-                    }
+                    
+                    
+//                    if (minimumRight != right) {
+//                        minimumRight.getParent().setLeft(null);
+//                    } else {
+//                        minimumRight.setLeft(left);
+//                    }
+//                    if (minimumRight.getRight() != null) {
+//                        minimumRight.setRight(minimumRight.getParent());
+//                    }
                   //node is a right child
                 } else {
                     parent.setRight(minimumRight);
-                    if (minimumRight != right) {
-                        minimumRight.getParent().setLeft(null);
+                    minimumRight.setLeft(left);
+                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(minimumRight.getRight());
+                        minimumRight.getRight().setParent(minimumRight.getParent());
+                        
+                    } else if (minimumRight==right && minimumRight.getRight() == null ){
+                        minimumRight.setRight(null);
                     } else {
-                        minimumRight.setParent(parent);
+                        minimumRight.setRight(right);
+                        minimumRight.getParent().setLeft(null);
                     }
-                    if (minimumRight.getRight() != null) {
-                        minimumRight.setRight(minimumRight.getParent());
-                    }
-                }
+                    
+//                    if (minimumRight != right) {
+//                        minimumRight.getParent().setLeft(null);
+//                    } else {
+//                        minimumRight.setParent(parent);
+//                    }
+//                    if (minimumRight.getRight() != null) {
+//                        minimumRight.setRight(minimumRight.getParent());
+//                    }
+                  }
                 // return value;
             }
             toRemove.setLeft(null);
@@ -320,10 +412,10 @@ public class AvlTreeMap<K, V> implements SortedMap<V, K> {
             toRemove.setParent(null);
             return value;
          // key not found
-        } else {
+     } else {
             return null;
-        }
-    }
+     }
+ }
 
     private AvlNode<K, V> find(AvlNode<K, V> current, K key) {
         if (current == null) {
