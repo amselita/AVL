@@ -8,17 +8,17 @@ public final class Pyramid extends Body {
     /**
      * variable representing the baselength of a pyramid
      */
-    public final double baselengthPyramid;
+    private final double baselengthPyramid;
     
     /**
      * variable representing the basewidth of a pyramid
      */
-    public final double basewidthPyramid;
+    private final double basewidthPyramid;
     
     /**
      * variable representing the height of a pyramid
      */
-    public final double heightPyramid;
+    private final double heightPyramid;
 
     /**
      * constructor of the body pyramid
@@ -26,7 +26,8 @@ public final class Pyramid extends Body {
      * @param basewidthPyramid
      * @param heightPyramid
      */
-    private Pyramid(double baselengthPyramid, double basewidthPyramid, double heightPyramid) {
+    public Pyramid(Vector3D location, double baselengthPyramid, double basewidthPyramid, double heightPyramid) {
+        super(location);
         this.baselengthPyramid = baselengthPyramid;
         this.basewidthPyramid = basewidthPyramid;
         this.heightPyramid = heightPyramid;
@@ -56,25 +57,31 @@ public final class Pyramid extends Body {
 
     /**
      * prints the baselength, basewidth and height of pyramid as a string representation 
-     * @String thr string representation of a pyramid
+     * @String the string representation of a pyramid
      */
     @Override
 	public String toString() {
-		System.out.println("Pyramid with base ("+baselengthPyramid+", "+basewidthPyramid+") and height "+heightPyramid+"at ("TODO;
-		return null;
+        Vector3D location=getLocation();
+		String string="Pyramid with base ("+baselengthPyramid+", "+basewidthPyramid+") and height "+heightPyramid+
+		        " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+		        return string;
 	}
-    // TODO
 
     @Override
     public boolean equals(Object o) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public double getLocation(Body body) {
-        // TODO Auto-generated method stub
-        return 0;
+        if (this==o){
+            return true;
+        } else if(o == null) {
+            return false;
+        } else if (getClass() != o.getClass()){
+            return false;     
+        } else {
+            Pyramid other = (Pyramid)o;
+            return basewidthPyramid == other.basewidthPyramid &&
+                   baselengthPyramid == other.baselengthPyramid &&
+                   heightPyramid == other.heightPyramid &&
+                   getLocation().equals(other.getLocation());
+        }
     }
 
 }

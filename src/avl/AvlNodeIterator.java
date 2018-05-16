@@ -2,10 +2,10 @@ package avl;
 
 import java.util.Iterator;
 
-public class AvlNodeIterator<K, V> implements Iterator<V> {
-    AvlNode<K, V> next;
+public class AvlNodeIterator<K,V> implements Iterator<V> {
+    AvlNode<K,V> next;
 
-    public AvlNodeIterator(AvlNode<K, V> min) {
+    public AvlNodeIterator(AvlNode<K,V> min) {
         next = min;
     }
 
@@ -26,23 +26,23 @@ public class AvlNodeIterator<K, V> implements Iterator<V> {
      */
     @Override
     public V next() {
-        AvlNode<K, V> current = next;
-
+        AvlNode<K,V> current = next;
+        //checks if minimum of the tree has a right child
         if (current.getRight() != null) {
             next = current.getRight().findMin();
         } else {
-            AvlNode<K, V> pointer = current;
-
-            if (pointer.getParent().getLeft() == pointer) {
-                next = pointer.getParent();
-            } else {
-                while (pointer.getParent() != null && pointer.getParent().getRight() == pointer) {
-                    pointer = pointer.getParent();
+            AvlNode<K,V> pointer = current;
+            if (pointer.getParent()!=null){
+                if (pointer.getParent().getLeft() == pointer) {
+                    next = pointer.getParent();
+                } else {
+                    while (pointer.getParent() != null && pointer.getParent().getRight() == pointer) {
+                        pointer = pointer.getParent();
+                    }
                 }
-
-                next = pointer.getParent();
             }
-        }
+            next = pointer.getParent();
+         }
         return current.getValue();
     }
 }

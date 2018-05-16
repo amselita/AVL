@@ -5,22 +5,22 @@ package avl;
  * @param <K> the key, which is of generic type
  * @param <V> the value, which is of generic type
  */
-public class AvlNode<K, V> {
+public class AvlNode<K,V> {
     
     /**
      * pointer to the parent node
      */
-    AvlNode<K, V> parent;
+    AvlNode<K,V> parent;
     
     /**
      * pointer to the left node or left subtree
      */
-    AvlNode<K, V> left;
+    AvlNode<K,V> left;
     
     /**
      * pointer to the right node or right subtree
      */
-    AvlNode<K, V> right;
+    AvlNode<K,V> right;
     
     /**
      * the varialbe storing the key
@@ -44,7 +44,7 @@ public class AvlNode<K, V> {
      * @param value of the key
      * @param parent of the node
      */
-    public AvlNode(K key, V value, AvlNode<K, V> parent) {
+    public AvlNode(K key, V value, AvlNode<K,V> parent) {
         this.parent = parent;
         left = null;
         right = null;
@@ -53,11 +53,11 @@ public class AvlNode<K, V> {
         this.balance = 0;
     }
 
-    public void setParent(AvlNode<K, V> parent) {
+    public void setParent(AvlNode<K,V> parent) {
         this.parent = parent;
     }
 
-    public AvlNode<K, V> getParent() {
+    public AvlNode<K,V> getParent() {
         return parent;
     }
 
@@ -69,29 +69,20 @@ public class AvlNode<K, V> {
         return balance;
     }
 
-    public void setLeft(AvlNode<K, V> left) {
+    public void setLeft(AvlNode<K,V> left) {
         this.left = left;
     }
 
-    public AvlNode<K, V> getLeft() {
+    public AvlNode<K,V> getLeft() {
         return left;
     }
 
-    public void setRight(AvlNode<K, V> right) {
+    public void setRight(AvlNode<K,V> right) {
         this.right = right;
     }
 
-    public AvlNode<K, V> getRight() {
+    public AvlNode<K,V> getRight() {
         return right;
-    }
-
-    public boolean hasLeft(AvlNode<K, V> node) {
-        return node.left != null;
-
-    }
-
-    public boolean hasRight(AvlNode<K, V> node) {
-        return node.right != null;
     }
 
     public K getKey() {
@@ -115,8 +106,8 @@ public class AvlNode<K, V> {
      * Returns the maximum node sorted by lexicographical order
      * @return the lexicographically biggest node
      */
-    public AvlNode<K, V> findMax() {
-        AvlNode<K, V> current = this;
+    public AvlNode<K,V> findMax() {
+        AvlNode<K,V> current = this;
         while (current.getRight() != null) {
             current = current.getRight();
         }
@@ -128,8 +119,8 @@ public class AvlNode<K, V> {
      * Returns the minumum node sorted by lexicographical order
      * @return the lexicographically smallest node
      */
-    public AvlNode<K, V> findMin() {
-        AvlNode<K, V> current = this;
+    public AvlNode<K,V> findMin() {
+        AvlNode<K,V> current = this;
         while (current.getLeft() != null) {
             current = current.getLeft();
         }

@@ -15,13 +15,14 @@ public final class Sphere extends Body {
     /**
      * variable representing the radius of a sphere
      */
-    public final double radiusSphere;
+    private final double radiusSphere;
 
     /**
      * constructor of a sphere
      * @param radiusSphere
      */
-    private Sphere(double radiusSphere) {
+    public Sphere(Vector3D location, double radiusSphere) {
+        super(location);
         this.radiusSphere = radiusSphere;
     }
     
@@ -47,25 +48,29 @@ public final class Sphere extends Body {
     
     /**
      * prints the radius of a sphere as a string representation 
-     * @return Sting the string represntation of a sphere
+     * @return Sting the string representation of a sphere
      */
     @Override
     public String toString() {
-        System.out.println("Sphere with radius " + radiusSphere + " at (" + TODO);
-        return null;
+        Vector3D location=getLocation();
+        String string="Sphere with radius (" + radiusSphere + 
+        ") at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        return string;
     }
-    // TODO
-
-    @Override
+    
+ @Override
     public boolean equals(Object o) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public double getLocation(Body body) {
-        // TODO Auto-generated method stub
-        return 0;
+        if (this==o){
+            return true;
+        } else if(o == null) {
+            return false;
+        } else if (getClass() != o.getClass()){
+            return false;     
+        } else {
+            Sphere other = (Sphere)o;
+            return radiusSphere == other.radiusSphere &&
+                   getLocation().equals(other.getLocation());
+        }
     }
 
 }

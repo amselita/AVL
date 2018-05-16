@@ -12,7 +12,7 @@ package avl;
  *            the value type.
  * @param <K>
  */
-public interface SortedMap<V, K> extends Iterable<V> {
+public interface SortedMap<V,K> extends Iterable<V> {
 
     /**
      * Checks if the map is empty.

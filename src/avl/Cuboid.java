@@ -5,17 +5,18 @@ package avl;
  */
 public final class Cuboid extends Body {
 
-    public final double lengthCuboid;
+    private final double lengthCuboid;
     
-    public final double widthCuboid;
+    private final double widthCuboid;
     
-    public final double heightCuboid;
+    private final double heightCuboid;
 
-    private Cuboid (double lengthCuboid, double heightCuboid, double widthCuboid, double xCoordinate, double yCoordinate, double zCoordinate){
+    public Cuboid (Vector3D location, double lengthCuboid, double heightCuboid, double widthCuboid) {
+        // set location in Body class
+        super(location);       
 		this.lengthCuboid=lengthCuboid;
 		this.heightCuboid=heightCuboid;
 		this.widthCuboid=widthCuboid;
-		this xCoordinate=xCoordinate;
 	}
 
     /**
@@ -45,22 +46,28 @@ public final class Cuboid extends Body {
      */
     @Override
     public String toString() {
-        System.out.println(
-                "Couboid with dimensions(" + lengthCuboid + " ," + widthCuboid + ", " + heightCuboid + "at (TODO");
-        return null;
+        Vector3D location=getLocation();
+        String string="Couboid with dimensions(" + lengthCuboid + " ," + widthCuboid + ", " + heightCuboid + 
+                " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        return string;
     }
 
     @Override
     public boolean equals(Object o) {
-        // Ist Objekt dieses Names vorhanden?
-        return false;
-    }
-
-    // TODO
-    @Override
-    public double getLocation(Body body) {
-
-        return body.xCoordinate;
-
+        if (this==o){
+            return true;
+        } else if(o == null) {
+            return false;
+        } else if (getClass() != o.getClass()){
+            return false;     
+        } else {
+            Cuboid other = (Cuboid)o;
+            Vector3D location=getLocation();
+            Vector3D locationOther=other.getLocation();
+            return lengthCuboid==other.lengthCuboid &&
+                    heightCuboid==other.heightCuboid &&
+                    widthCuboid==other.widthCuboid &&
+                    location.equals(locationOther);
+        }
     }
 }

@@ -1,6 +1,20 @@
 package avl;
 
 abstract class Body {
+    
+    private Vector3D location;
+    
+    public Body(Vector3D location) {
+        this.location=location;
+    }
+    
+    public Vector3D getLocation() {
+        return location;
+    }
+    
+    public void setLocation(Double xCoordinate, Double yCoordinate, double zCoordinate){
+        
+    }
 
     /**
      * calculates the surface of an body
@@ -29,7 +43,6 @@ abstract class Body {
      */
     // TODO
     public abstract boolean equals(Object o);
-
-    public abstract double getLocation(Body body);
-
+    
+   
 }

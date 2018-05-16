@@ -15,15 +15,15 @@ public final class Cylinder extends Body {
     /**
      * variablethe radius of a cylinder
      */
-    public final double radiusCylinder;
+    private final double radiusCylinder;
     
-    public final double heightCylinder;
+    private final double heightCylinder;
     
 
-    private Cylinder(double radiusCylinder, double heightCylinder, double PI) {
+    public Cylinder(Vector3D location, double radiusCylinder, double heightCylinder) {
+        super(location);
         this.radiusCylinder = radiusCylinder;
         this.heightCylinder = heightCylinder;
-
     }
 
     /**
@@ -52,21 +52,26 @@ public final class Cylinder extends Body {
       */
     @Override
     public String toString() {
-        System.out.println("Cylinder with radius " + radiusCylinder + " and height " + heightCylinder + " at (" + TODO);
-        return null;
+        Vector3D location=getLocation();
+        String string="Cylinder with radius " + radiusCylinder + " and height " + heightCylinder + 
+                " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        return string;
     }
-    // TODO
-
+    
     @Override
     public boolean equals(Object o) {
-        // TODO Auto-generated method stub
-        return false;
+        if (this==o){
+            return true;
+        } else if(o == null) {
+            return false;
+        } else if (getClass() != o.getClass()){
+            return false;     
+        } else {
+            Cylinder other = (Cylinder)o;
+            return radiusCylinder == other.radiusCylinder &&
+                   heightCylinder == other.heightCylinder &&
+                   getLocation().equals(other.getLocation());
+        }
     }
-
-    @Override
-    public double getLocation(Body body) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
+    
 }
