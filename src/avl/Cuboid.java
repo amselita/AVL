@@ -47,8 +47,14 @@ public final class Cuboid extends Body {
     @Override
     public String toString() {
         Vector3D location=getLocation();
-        String string="Couboid with dimensions(" + lengthCuboid + " ," + widthCuboid + ", " + heightCuboid + 
-                " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        int widthCuboidInt=(int)widthCuboid;
+        int lengthCuboidInt=(int)lengthCuboid;
+        int heightCuboidInt=(int)heightCuboid;
+        int xCoordinate=(int) location.xCoordinate;
+        int yCoordinate= (int)location.yCoordinate;
+        int zCoordinate= (int)location.zCoordinate;
+        String string="Couboid with dimensions(" + lengthCuboidInt + " ," + widthCuboidInt + ", " + heightCuboidInt + 
+                " at ("+xCoordinate+", "+yCoordinate+", "+zCoordinate+")";
         return string;
     }
 

@@ -37,7 +37,11 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
     }
 
     public AvlNode<K,V> findMin() {
-        return root.findMin();
+        if(root==null){
+            return null;
+        } else {
+           return root.findMin();
+        }
     }
     
     /**
@@ -117,28 +121,66 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
 //        node.height = 1 + max(height(node.left), height(node.right));
 //    }
 
+    private void updateBalance(AvlNode<K, V> current){
+        AvlNode<K,V> parent=current.getParent();
+//        current.setBalance(0); in insert machen
+           if(parent.getBalance()==0){
+               if(isLeftChild(current)){
+                   parent.setBalance(-1);
+               }else {
+                   parent.setBalance(1);
+               }
+           } else if(parent.getBalance()==1 || parent.getBalance()==-1){
+                parent.setBalance(0);
+           }
+        current=parent;
+        if (parent.getParent() != null){
+            updateBalance(parent);        
+        }
+    }      
+    
+ private void updateBalanceAfterRemove(){
+     AvlNode<K, V> current=root.findMin();
+     AvlNode<K,V> maximum=root.findMax();
+     while(current!=maximum){
+         updateBalance(current);
+     }
+    }
+    
     @Override
     public V put(K key, V value) {
         return insert(root, key, value);
     }
     
     /**
-     * utility method inserting a node in the order of the tree
+     * utility method inserting a node in the order of the tree by
+     * using a comparator, which returns null if the inserted key 
+     * is equal compared to the current key, a value smaller than 0 
+     * if the inserted node is smaller compared to the current
+     *  node and a value bigger than 0 if the inserted key is 
+     *  bigger compared to the current key
      * @param current node from the insertion should start
      * @param key of the node to insert
      * @param value of the node to insert
      * @return V null if the key already existed, the old value if the key already existed
      */
     private V insert(AvlNode<K,V> current, K key, V value) {
+        AvlNode< K, V> insertedNode=new AvlNode<K,V>(key, value, root);
+        //check if tree is empty, if yes, inserted node becomes root
         if (isEmpty() == true) {
             root = new AvlNode<K,V>(key, value, null);
+            //root.setBalance(0);
             return null;
         }
         int compared = comp.compare(key, current.getKey());
+        //key to insert is equal compared to the current key, current value is 
+        //replaced by the value to insert
         if (compared == 0) {
             V oldvalue = current.getValue();
             current.setValue(value);
             return oldvalue;
+         //key to insert is smaller compared to the current key,
+         //the left child of current becomes the new current node
         } else if (compared < 0) {
             if (current.getLeft() != null) {
                 current = current.getLeft();
@@ -146,6 +188,8 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
             } else {
                 current.setLeft(new AvlNode<K,V>(key, value, current));
             }
+         //key to insert is bigger compared to the current key,
+         //the right child of current becomes the new current node
         } else {
             if (current.getRight() != null) {
                 current = current.getRight();
@@ -154,8 +198,12 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                 current.setRight(new AvlNode<K,V>(key, value, current));
             }
         }
+        current.setBalance(0);
+        updateBalance(insertedNode);
         return null;
     }
+    
+   
 
 //    private void updateHeight(AvlNode<K,V> toUpdate) {
 //        toUpdate.getParent().setHeight(toUpdate.getHeight() + 1);
@@ -182,38 +230,36 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
             V value;
             value = toRemove.getValue();
             AvlNode<K,V> parent = toRemove.getParent();
-            //node has no children
             if (left == null && right == null) {
-                //node is root
+                //node has no children
                 if (parent == null) {
+                    //node is root
                     root = null;
-                 //node is a left child
                 } else if (isLeftChild(toRemove)) {
+                    //node is a left child
                     parent.setLeft(null);
-                 //node is a right child
                 } else {
+                    //node is a right child
                     parent.setRight(null);
                 }
-                // return value;
-             //node has only a left child
             } else if (left != null && right == null) {
-                //node is root 
+                //node has only a left child
                 if (parent == null) {
+                    //node is root 
                     root = left;
                     left.setParent(null);
-                 //node is left child
                 } else if (isLeftChild(toRemove) == true) {
+                    //node is left child
                     parent.setLeft(left);
                     left.setParent(parent);
-                 //node is right child
                 } else {
+                    //node is right child
                     parent.setRight(left);
                     left.setParent(parent);
                    // right.setParent(parent);
                 }
-                // return value; TODO
-                // node to be removed has only a right child
-            } else if (left == null && right != null) {  
+            } else if (left == null && right != null) {
+                // node to be removed has only a right child  
                 AvlNode<K,V> minimumRight;
                 minimumRight=toRemove.getRight().findMin();
                 // node is the root 
@@ -230,27 +276,14 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
-                    
-                    
-                    
-                    
-//                    if (minimumRight != right) {
-//                        minimumRight.getParent().setLeft(null);
-//                        minimumRight.setRight(right);
-//                    }
-//                    if(minimumRight.getRight()!=null){
-//                        minimumRight.getParent().setLeft(minimumRight.getRight());
-//                        minimumRight.getRight().setParent(minimumRight.getParent());
-//                    }
-                    
                    // node is left child
                 } else if (isLeftChild(toRemove)) {
                     parent.setLeft(minimumRight);
                     minimumRight.setParent(parent);
                     //minimum has a right child
-                     //minimum has no right child and is itself the 
-                     //right child of the node
-                    if ((minimumRight != right && minimumRight.getRight() != null )){
+                    //minimum has no right child and is itself the
+                    if ((minimumRight != right && minimumRight.getRight() != null )){ 
+                        //right child of the node
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(minimumRight.getRight());
                         minimumRight.getRight().setParent(minimumRight.getParent());
@@ -261,9 +294,8 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
-                    // toRemove.getRight().findMin().setLeft(toRemove.getLeft());
-                  // node is left child
                 } else {
+                    // node is left child
                     parent.setRight(minimumRight);
                     if ((minimumRight != right && minimumRight.getRight() != null )){
                         minimumRight.setRight(right);
@@ -276,25 +308,13 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
-                    
-                    
-                    
-//                    if (minimumRight != right) {
-//                        minimumRight.getParent().setLeft(null);
-//                    } else {
-//                        minimumRight.setParent(parent);
-//                    }
-//                    if (minimumRight.getRight() != null) {
-//                        minimumRight.setRight(minimumRight.getParent());
-//                    }
                 }
-                // return value;
-                //node has a left child and a right child
             } else if (left != null && right != null) {
+                //node has a left child and a right child
                 AvlNode<K,V> minimumRight;
                 minimumRight=toRemove.getRight().findMin();
-                //node is the root 
                 if (parent == null) {
+                    //node is the root
                     AvlNode<K,V> oldRoot = root;
                     root = minimumRight;
                     //minimum has a right child
@@ -309,29 +329,12 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                         minimumRight.setRight(right);
                         right.setParent(minimumRight);
                         minimumRight.getParent().setLeft(null);
-                        
                     }
-//                      else  //minimumRight.setRight(right);
-//                        //minimumRight.getParent().setLeft(null);
-//                    }
-//                    
-                    
-//                    if (minimumRight != right) {
-//                    minimumRight.getParent().setLeft(null);
-//                        minimumRight.setRight(right);
-//                        
-//                    } else {
-//                        minimumRight.setParent(null);
-//                        minimumRight.setRight(null);
-//                    }
-//                    if (minimumRight.getRight() != null) {
-//                        minimumRight.getRight().setParent(minimumRight.getParent());
-//                    }
                     minimumRight.setLeft(oldRoot.getLeft());
                     oldRoot.getLeft().setParent(minimumRight);
                     minimumRight.setParent(null);
-                   //node is a left child
                 } else if (isLeftChild(toRemove)) {
+                    //node is a left child
                     parent.setLeft(minimumRight);
                     minimumRight.setLeft(left);
                     if ((minimumRight != right && minimumRight.getRight() != null )){
@@ -345,51 +348,32 @@ public class AvlTreeMap<K,V> implements avl.SortedMap<V,K> {
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
-                    
-                    
-//                    if (minimumRight != right) {
-//                        minimumRight.getParent().setLeft(null);
-//                    } else {
-//                        minimumRight.setLeft(left);
-//                    }
-//                    if (minimumRight.getRight() != null) {
-//                        minimumRight.setRight(minimumRight.getParent());
-//                    }
-                  //node is a right child
                 } else {
+                    //node is a right child
                     parent.setRight(minimumRight);
                     minimumRight.setLeft(left);
                     if ((minimumRight != right && minimumRight.getRight() != null )){
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(minimumRight.getRight());
                         minimumRight.getRight().setParent(minimumRight.getParent());
-                        
                     } else if (minimumRight==right && minimumRight.getRight() == null ){
                         minimumRight.setRight(null);
                     } else {
                         minimumRight.setRight(right);
                         minimumRight.getParent().setLeft(null);
                     }
-                    
-//                    if (minimumRight != right) {
-//                        minimumRight.getParent().setLeft(null);
-//                    } else {
-//                        minimumRight.setParent(parent);
-//                    }
-//                    if (minimumRight.getRight() != null) {
-//                        minimumRight.setRight(minimumRight.getParent());
-//                    }
                 }
-                // return value;
             }
+            //TODO
             toRemove.setLeft(null);
             toRemove.setRight(null);
             toRemove.setParent(null);
+            // updateBalance();
             return value;
-         // key not found
-     } else {
+        } else {
+            // key not found
             return null;
-     }
+        }
  }
 
     public AvlNode<K,V> find(AvlNode<K,V> current, K key) {

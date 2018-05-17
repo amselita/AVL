@@ -53,8 +53,12 @@ public final class Sphere extends Body {
     @Override
     public String toString() {
         Vector3D location=getLocation();
-        String string="Sphere with radius (" + radiusSphere + 
-        ") at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        int radiusSphereInt=(int)radiusSphere;
+        int xCoordinate=(int) location.xCoordinate;
+        int yCoordinate= (int)location.yCoordinate;
+        int zCoordinate= (int)location.zCoordinate;
+        String string="Sphere with radius (" + radiusSphereInt+ 
+        ") at ("+xCoordinate+", "+yCoordinate+", "+zCoordinate+")";
         return string;
     }
     

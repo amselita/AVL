@@ -53,8 +53,13 @@ public final class Cylinder extends Body {
     @Override
     public String toString() {
         Vector3D location=getLocation();
-        String string="Cylinder with radius " + radiusCylinder + " and height " + heightCylinder + 
-                " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        int radiusCylinderInt=(int)radiusCylinder;
+        int heightCylinderInt=(int)heightCylinder;
+        int xCoordinate=(int) location.xCoordinate;
+        int yCoordinate= (int)location.yCoordinate;
+        int zCoordinate= (int)location.zCoordinate;
+        String string="Cylinder with radius " + radiusCylinderInt + " and height " + heightCylinderInt + 
+                " at ("+xCoordinate+", "+yCoordinate+", "+zCoordinate+")";
         return string;
     }
     

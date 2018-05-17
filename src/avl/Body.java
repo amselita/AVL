@@ -12,7 +12,7 @@ abstract class Body {
         return location;
     }
     
-    public void setLocation(Double xCoordinate, Double yCoordinate, double zCoordinate){
+    public void setLocation(double xCoordinate, double yCoordinate, double zCoordinate){
         
     }
 

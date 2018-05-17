@@ -62,8 +62,14 @@ public final class Pyramid extends Body {
     @Override
 	public String toString() {
         Vector3D location=getLocation();
-		String string="Pyramid with base ("+baselengthPyramid+", "+basewidthPyramid+") and height "+heightPyramid+
-		        " at ("+location.xCoordinate+", "+location.yCoordinate+", "+location.zCoordinate+")";
+        int baselengthPyramidInt=(int)baselengthPyramid;
+        int basewidthPyramidInt=(int)basewidthPyramid;
+        int heightPyramidInt=(int)heightPyramid;
+        int xCoordinate=(int) location.xCoordinate;
+        int yCoordinate= (int)location.yCoordinate;
+        int zCoordinate= (int)location.zCoordinate;
+		String string="Pyramid with base ("+baselengthPyramidInt+", "+basewidthPyramidInt+") and height "+heightPyramidInt+
+		        " at ("+xCoordinate+", "+yCoordinate+", "+zCoordinate+")";
 		        return string;
 	}
 

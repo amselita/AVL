@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.sun.org.apache.xalan.internal.xsltc.dom.MatchingIterator;
-
 import java.io.IOException;
 
 public final class Shell {
@@ -44,7 +41,9 @@ public final class Shell {
 					} else if (tokens.length >= 3){
 					}   
 				}
-				if ("CLEAR".startsWith(command) ) {
+				if (tokens.length==0){
+				 //if no input has been given
+				} else if ("CLEAR".startsWith(command) ) {
 				    if (bodies.isEmpty()){
 				        System.out.println("Map is already clear.");
 				    } else {
@@ -109,35 +108,57 @@ public final class Shell {
                         }
                     }
 				} else if("REMOVE".startsWith(command)) {
-				    if(bodies.containsKey(key) && key != null){
-				        bodies.remove(key);
-				    } else {
-				        System.out.println("Error! Key does not exist.");
-				    }
-				} else if("FIND".startsWith(command)) {
-                    Body body=bodies.get(key); 
-				    if (bodies.containsKey(key) && key!=null){
-				            System.out.println(body.toString());				   
-					} else {
-						System.out.println("Error! Key does not exist.");
-					}
-				} else if("SURFACE".startsWith(command)) {
-                    Body body=bodies.get(key);
-                    if(bodies.containsKey(key) && key!=null){
-                        System.out.println(body.getSurface());
+                    if(key == "") {
+                        System.out.println("Error! No key provided");
+                        
                     } else {
-                        System.out.println("Error! "+key+" does not exist");
+    				    if(bodies.containsKey(key) && key != null){
+    				        Body body=bodies.get(key); 
+    				        bodies.remove(key);
+    				        System.out.println("Removed <"+body.toString()+"> with name "+key);
+    				    } else {
+    				        System.out.println("Error! No body with name <"+key+"> is stored.");
+    				    }
                     }
-				} else if(command.startsWith("VOLUME") && command.length()<=6) {
-				    Body body=bodies.get(key);
-				    if(bodies.containsKey(key) && key!=null){
-				        System.out.println(body.getVolume());
-				    } else {
-				        System.out.println("Error! "+key+" does not exist");
-				    }
+				} else if("FIND".startsWith(command)) {
+                    if(key == "") {
+                        System.out.println("Error! No key provided");
+                    } else {
+                        Body body=bodies.get(key); 
+                        if (bodies.containsKey(key) && key!=null){
+                            System.out.println(body.toString());				   
+                        } else {
+                            System.out.println("Error! No body with name <"+key+"> is stored.");
+                        }
+                    }
+				} else if("SURFACE".startsWith(command)) {
+                    if(key == "") {
+                        System.out.println("Error! No key provided");
+                        
+                    } else {
+                        Body body=bodies.get(key);
+                        if(bodies.containsKey(key) && key!=null){
+                            System.out.println(Math.round((body.getSurface()) * 100.0) / 100.0);
+                        } else {
+                            System.out.println("Error! No body with name <"+key+"> is stored.");
+                        }
+                    }
+				} else if("VOLUME".startsWith(command)) {
+                    if(key == "") {
+                        System.out.println("Error! No key provided");
+                        
+                    } else {
+                        Body body=bodies.get(key);
+                        if(bodies.containsKey(key) && key!=null){
+                            // print value rounded to 2 decimal places
+                            System.out.println(Math.round((body.getVolume()) * 100.0) / 100.0);
+                        } else {
+                            System.out.println("Error! No body with name <"+key+"> is stored.");
+                        }
+                    }
 				} else if("DEBUG".startsWith(command)) {
                     System.out.println(bodies.toString());
-				} else if(command.startsWith("OBJECTS")) {
+				} else if("OBJECTS".startsWith(command)) {
 				   Iterator<Body> objectsIterator=bodies.iterator();
 				   String string="[";
 				   while (objectsIterator.hasNext()){
